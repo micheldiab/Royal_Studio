@@ -1,10 +1,8 @@
-// src/App.js
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-server='royal-studio.vercel.app';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://royal-studio.vercel.app'; // Use environment variable
 
 function App() {
     const [barcodeData, setBarcodeData] = useState([]);
@@ -12,7 +10,7 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://${server}/api/barcodes`);
+                const response = await axios.get(`${SERVER_URL}/api/barcodes`);
                 setBarcodeData(Object.entries(response.data));
             } catch (error) {
                 console.error('Error fetching barcode data:', error);
@@ -32,15 +30,19 @@ function App() {
                 <h1>Royal Studio</h1>
             </header>
             <main>
-                {barcodeData.map(([barcode, { imageURL, qrCode }]) => (
-                    <div key={barcode} className="image-container">
-                         <img src={`https://${server}${imageURL}`} alt={`Barcode ${barcode}`} />
-                        <img src={qrCode} alt={`QR Code ${barcode}`} />
-                        <a href={`https://${server}${imageURL}`} download className="download-button">
-                            Download Image
-                        </a>
-                    </div>
-                ))}
+                {barcodeData.length > 0 ? (
+                    barcodeData.map(([barcode, { imageURL, qrCode }]) => (
+                        <div key={barcode} className="image-container">
+                            <img src={`${SERVER_URL}${imageURL}`} alt={`Barcode ${barcode}`} />
+                            <img src={qrCode} alt={`QR Code ${barcode}`} />
+                            <a href={`${SERVER_URL}${imageURL}`} download className="download-button">
+                                Download Image
+                            </a>
+                        </div>
+                    ))
+                ) : (
+                    <p>No images available.</p>
+                )}
             </main>
         </div>
     );

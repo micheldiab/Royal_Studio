@@ -1,5 +1,3 @@
-// server.js
-
 const express = require('express');
 const chokidar = require('chokidar');
 const path = require('path');
@@ -8,16 +6,15 @@ const QRCode = require('qrcode');
 const cors = require('cors');
 
 const app = express();
-const PORT = 5000;
 
 app.use(cors());
 
 // Directory to watch for new images
-const IMAGES_DIR = path.join(__dirname, 'images');
+const IMAGES_DIR = path.join(process.cwd(), 'api/images'); // Adjust path to reflect new structure
 
 // Ensure the images directory exists
 if (!fs.existsSync(IMAGES_DIR)) {
-    fs.mkdirSync(IMAGES_DIR);
+    fs.mkdirSync(IMAGES_DIR, { recursive: true }); // Ensure directories are created recursively
 }
 
 // Store barcode to image mappings
@@ -55,7 +52,5 @@ app.get('/api/barcodes', (req, res) => {
     res.json(barcodeImageMapping);
 });
 
-app.listen(process.env.PORT || 5000, () => {
-    console.log("Yey, your server is running");
-  });
-
+// Export the app for Vercel
+module.exports = app;
