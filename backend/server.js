@@ -55,7 +55,7 @@ app.get('/api/barcodes', (req, res) => {
     res.json(barcodeImageMapping);
 });
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(5000, () => {
     console.log("Yey, your server is running");
   });
 
